@@ -31,9 +31,9 @@
                     <RowDefinition></RowDefinition>
                     <RowDefinition Height="auto"></RowDefinition>
                 </Grid.RowDefinitions>
-                <TextBlock x:Name ="titleBar" MouseLeftButtonDown="titleBar_MouseLeftButtonDown"   Margin="12">My Title</TextBlock>
+                <TextBlock x:Name ="titleBar" MouseLeftButtonDown="titleBar_MouseLeftButtonDown"   Margin="12" Foreground="#FF595FD6">Euro to Russian Ruble online</TextBlock>
                 <Grid Grid.Row="1">
-                    <TextBlock Grid.Row="1" FontSize="26" Margin="10">My Content</TextBlock>
+                    <Image Name="image1" />
                 </Grid>
             </Grid>
             
