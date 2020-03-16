@@ -26,3 +26,17 @@ C:\Users\Юрий\Desktop\ModernWidget\EuroWIdjet\obj\Debug\EuroWIdjet.Propertie
 C:\Users\Юрий\Desktop\ModernWidget\EuroWIdjet\obj\Debug\EuroWIdjet.csproj.GenerateResource.cache
 C:\Users\Юрий\Desktop\ModernWidget\EuroWIdjet\obj\Debug\EuroWIdjet.exe
 C:\Users\Юрий\Desktop\ModernWidget\EuroWIdjet\obj\Debug\EuroWIdjet.pdb
+C:\Users\yv-sandreikin\Desktop\ModernWidget\EuroWIdjet\bin\Debug\EuroWIdjet.exe.config
+C:\Users\yv-sandreikin\Desktop\ModernWidget\EuroWIdjet\bin\Debug\EuroWIdjet.exe
+C:\Users\yv-sandreikin\Desktop\ModernWidget\EuroWIdjet\bin\Debug\EuroWIdjet.pdb
+C:\Users\yv-sandreikin\Desktop\ModernWidget\EuroWIdjet\obj\Debug\EuroWIdjet.csprojAssemblyReference.cache
+C:\Users\yv-sandreikin\Desktop\ModernWidget\EuroWIdjet\obj\Debug\MainWindow.g.cs
+C:\Users\yv-sandreikin\Desktop\ModernWidget\EuroWIdjet\obj\Debug\App.g.cs
+C:\Users\yv-sandreikin\Desktop\ModernWidget\EuroWIdjet\obj\Debug\EuroWIdjet_MarkupCompile.cache
+C:\Users\yv-sandreikin\Desktop\ModernWidget\EuroWIdjet\obj\Debug\EuroWIdjet_MarkupCompile.lref
+C:\Users\yv-sandreikin\Desktop\ModernWidget\EuroWIdjet\obj\Debug\MainWindow.baml
+C:\Users\yv-sandreikin\Desktop\ModernWidget\EuroWIdjet\obj\Debug\EuroWIdjet.g.resources
+C:\Users\yv-sandreikin\Desktop\ModernWidget\EuroWIdjet\obj\Debug\EuroWIdjet.Properties.Resources.resources
+C:\Users\yv-sandreikin\Desktop\ModernWidget\EuroWIdjet\obj\Debug\EuroWIdjet.csproj.GenerateResource.cache
+C:\Users\yv-sandreikin\Desktop\ModernWidget\EuroWIdjet\obj\Debug\EuroWIdjet.exe
+C:\Users\yv-sandreikin\Desktop\ModernWidget\EuroWIdjet\obj\Debug\EuroWIdjet.pdb
