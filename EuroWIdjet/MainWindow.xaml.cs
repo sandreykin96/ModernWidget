@@ -17,6 +17,7 @@ using System.Windows.Interop;
 using System.Globalization;
 using System.Net;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace EuroWIdjet
 {
@@ -38,6 +39,7 @@ namespace EuroWIdjet
         public const uint SWP_SHOWWINDOW = 0x40;
         private const int GWL_EXSTYLE = -20;
         private const int WS_EX_TOOLWINDOW = 0x00000080;
+        private const string TRADES = "https://api.exmo.com/v1/trades/?pair=USD_RUB";
 
         public MainWindow()
         {
@@ -45,44 +47,54 @@ namespace EuroWIdjet
 
             this.Background = new SolidColorBrush(Color.FromArgb(0, 34, 34, 34));
 
-            WebClient client = new WebClient();
-            using (Stream stream = client.OpenRead("https://api.exmo.com/v1/trades/?pair=USD_RUB"))
-            {
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    string line = "";
-                    if ((line = reader.ReadLine()) != null)
-                    {
-                        var sentences = line.Split(',');
-
-                        var arr = new List<string>();
-
-                        foreach (var item in sentences)
-                        {
-                            int index = 0;
-                            index = item.IndexOf("price");
-                            if (index > 0)
-                            {
-                                
-                                arr.Add(item.Substring(index + 8,4));
-                            }
-                        }
-                    }
-
-                    //ваш код тут. тут нужно 1) превратить как то строку в числа
-                    // 2) передать функции( методу) drawGraph() массив с числами и массив со временем. 
-                    
-                }
-            }
+            var listNums =  parseTrades(getTrades());
+            double awerage = calkAverage(listNums);
 
             drawGraph();
 
         }
 
-        //3)
-        //надо сделать так, чтобы метод drawGraph строил график из массивов чисел и соответсвующему им времени. 
-        //в примере строится синус. 
-        //для начала поиграться с цветами графика, поглядеть что за что отвечает. 
+        private string getTrades()
+        {
+            string line = "";
+            WebClient client = new WebClient();
+            using (Stream stream = client.OpenRead(TRADES))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    line = reader.ReadLine();
+                }
+            }
+            return line;
+        }
+
+        private double calkAverage(List<double> arr)
+        {
+            double sum = 0;
+            foreach (var item in arr)
+            {
+                sum += item;
+            }
+
+            return sum / arr.Count();
+        }
+
+        private List<double> parseTrades(string line)
+        {
+            var sentences = line.Split(',');
+            var arr = new List<double>();
+
+            foreach (var item in sentences)
+            {
+                if (item.Contains("price"))
+                {
+                    var a = Regex.Replace(item, @"[^\d-[.]]", "").Replace(".", ",");
+                    double r = Convert.ToDouble(a);
+                    arr.Add(r);
+                }
+            }
+            return arr;
+        }
 
         private void drawGraph()
         {

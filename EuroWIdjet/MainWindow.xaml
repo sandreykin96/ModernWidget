@@ -25,6 +25,7 @@
                     </GradientBrush.GradientStops>
                 </LinearGradientBrush>
             </Border.Background>
+            
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"></RowDefinition>
@@ -38,7 +39,6 @@
             </Grid>
             
         </Border>
-        
     </Border>
 
 </Window>
