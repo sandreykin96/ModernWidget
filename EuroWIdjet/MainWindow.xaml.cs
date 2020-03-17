@@ -15,17 +15,77 @@ using System.Windows.Shapes;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Globalization;
+using System.Net;
+using System.IO;
 
 namespace EuroWIdjet
 {
     public partial class MainWindow : Window
     {
+
+        [DllImport("user32.dll")]
+        private static extern int SetWindowLong(IntPtr window, int index, int value);
+
+        [DllImport("user32.dll")]
+        private static extern int GetWindowLong(IntPtr window, int index);
+
+        [DllImport("user32.dll")]
+        public static extern bool SetWindowPos(int hWnd, int hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
+        public const int HWND_BOTTOM = 0x1;
+        public const uint SWP_NOSIZE = 0x1;
+        public const uint SWP_NOMOVE = 0x2;
+        public const uint SWP_SHOWWINDOW = 0x40;
+        private const int GWL_EXSTYLE = -20;
+        private const int WS_EX_TOOLWINDOW = 0x00000080;
+
         public MainWindow()
         {
             InitializeComponent();
+
             this.Background = new SolidColorBrush(Color.FromArgb(0, 34, 34, 34));
 
-            //Сгенерирум данные для графиков
+            WebClient client = new WebClient();
+            using (Stream stream = client.OpenRead("https://api.exmo.com/v1/trades/?pair=USD_RUB"))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    string line = "";
+                    if ((line = reader.ReadLine()) != null)
+                    {
+                        var sentences = line.Split(',');
+
+                        var arr = new List<string>();
+
+                        foreach (var item in sentences)
+                        {
+                            int index = 0;
+                            index = item.IndexOf("price");
+                            if (index > 0)
+                            {
+                                
+                                arr.Add(item.Substring(index + 8,4));
+                            }
+                        }
+                    }
+
+                    //ваш код тут. тут нужно 1) превратить как то строку в числа
+                    // 2) передать функции( методу) drawGraph() массив с числами и массив со временем. 
+                    
+                }
+            }
+
+            drawGraph();
+
+        }
+
+        //3)
+        //надо сделать так, чтобы метод drawGraph строил график из массивов чисел и соответсвующему им времени. 
+        //в примере строится синус. 
+        //для начала поиграться с цветами графика, поглядеть что за что отвечает. 
+
+        private void drawGraph()
+        {
 
             int Np = 30;
             double[] Data1 = new double[Np + 1];
@@ -57,16 +117,11 @@ namespace EuroWIdjet
                 drw.Brush = Brushes.Transparent;
                 drw.Pen = new Pen(Brushes.White, 0.2);
 
-                //RectangleGeometry myRectGeometry = new RectangleGeometry();
-                //myRectGeometry.Rect = new Rect(-0.1, -0.1, 1.2, 1.2);
-                //gg.Children.Add(myRectGeometry);
-
                 //Numbers
                 drw.Pen = new Pen(Brushes.FloralWhite, 0.005);
 
                 for (int i = 1; i < 10; i++)
                 {
-
                     // Create a formatted text string.
                     FormattedText formattedText = new FormattedText(
                         ((double)(1 - i * 0.1)).ToString(),
@@ -88,26 +143,11 @@ namespace EuroWIdjet
             }
 
         }
+
         private void titleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
         }
-
-        [DllImport("user32.dll")]
-        private static extern int SetWindowLong(IntPtr window, int index, int value);
-
-        [DllImport("user32.dll")]
-        private static extern int GetWindowLong(IntPtr window, int index);
-
-        [DllImport("user32.dll")]
-        public static extern bool SetWindowPos(int hWnd, int hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
-
-        public const int HWND_BOTTOM = 0x1;
-        public const uint SWP_NOSIZE = 0x1;
-        public const uint SWP_NOMOVE = 0x2;
-        public const uint SWP_SHOWWINDOW = 0x40;
-        private const int GWL_EXSTYLE = -20;
-        private const int WS_EX_TOOLWINDOW = 0x00000080;
 
         private void ShoveToBackground()
         {
