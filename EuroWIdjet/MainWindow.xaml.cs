@@ -49,80 +49,19 @@ namespace EuroWIdjet
 
             this.Background = new SolidColorBrush(Color.FromArgb(0, 34, 34, 34));
 
-            startSycle();
-
-        }
-
-        private void startSycle()
-        {
+            var valueList = new Dictionary<DateTime, double>();
             int i = 0;
-            var data = new Dictionary<DateTime, double>();
-
             while (i < 10)
             {
                 double currensy = GetCurrency();
-                var time = DateTime.Now;
-                data.Add(time, currensy);
-
-                Thread.Sleep(100);
+               
+                valueList.Add(DateTime.Now, currensy);
+                lineChart.DataContext = valueList;
+                
+                Thread.Sleep(1000);
                 i++;
             }
-            //data.Add(DateTime.Now, 79);
-            //Thread.Sleep(100);
-            //data.Add(DateTime.Now, 80);
 
-            image1.Source = drawGraph(data);
-        }
-
-        private DrawingImage drawGraph(Dictionary<DateTime, double> data)
-        {
-            var pointsCount = data.Count - 1;
-
-            DrawingGroup drawingGroup = new DrawingGroup();
-            GeometryDrawing geometryDrawing = new GeometryDrawing();
-            GeometryGroup geometryGroup = new GeometryGroup();
-            geometryDrawing.Brush = Brushes.Red;
-            geometryDrawing.Pen = new Pen(Brushes.Pink, 0.05);
-
-            geometryGroup = new GeometryGroup();
-
-            for (int i = 1; i <= pointsCount; i++)
-            {
-                var a = new Point((double)i*5 / (double)pointsCount, 100-data.Values.ElementAt(i));
-                var b = new Point((double)(i - 1)*5 / (double)pointsCount, 100-data.Values.ElementAt(i - 1));
-
-                LineGeometry line = new LineGeometry(a, b);
-                geometryGroup.Children.Add(line);
-            }
-
-            geometryDrawing.Brush = Brushes.Transparent;
-            geometryDrawing.Pen = new Pen(Brushes.White, 0.015);
-            
-            //Numbers
-
-            var maxValue = data.Values.Max();
-            var minValue = data.Values.Min();
-            var diff = (maxValue - minValue)/10;
-            
-            //for (int i = 1; i < 10; i++)
-            //{
-            //    // Create a formatted text string.
-            //    FormattedText formattedText = new FormattedText(
-            //        ((double)(0 - i *diff)).ToString(),
-            //        CultureInfo.GetCultureInfo("en-us"),
-            //        FlowDirection.LeftToRight,
-            //        new Typeface("Verdana"),
-            //        0.04,
-            //        Brushes.Green);
-
-            //    //Build a geometry out of the formatted text.
-            //    Geometry geometry = formattedText.BuildGeometry(new Point(0, -i * diff -minValue ));
-            //    geometryGroup.Children.Add(geometry);
-            //}
-
-            geometryDrawing.Geometry = geometryGroup;
-            drawingGroup.Children.Add(geometryDrawing);
-            return new DrawingImage(drawingGroup);
         }
 
         double GetCurrency()
@@ -215,7 +154,7 @@ namespace EuroWIdjet
             {
                 if (item.Contains("price"))
                 {
-                    var a = Regex.Replace(item, @"[^\d-[.]]", "")/*.Replace(".", ",")*/;
+                    var a = Regex.Replace(item, @"[^\d-[.]]", "").Replace(".", ",");
                     double r = Convert.ToDouble(a);
                     arr.Add(r);
                 }
