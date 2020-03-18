@@ -34,7 +34,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock x:Name ="titleBar" MouseLeftButtonDown="titleBar_MouseLeftButtonDown"   Margin="12" Foreground="#FF595FD6">Euro to Russian Ruble online</TextBlock>
                 <Grid Grid.Row="1">
-                    <Image Name="image1" />
+                    <Image Name="image1" Source="{Binding ElementName=Graph}" />
                 </Grid>
             </Grid>
             

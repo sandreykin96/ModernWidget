@@ -18,11 +18,19 @@ using System.Globalization;
 using System.Net;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace EuroWIdjet
 {
     public partial class MainWindow : Window
     {
+
+        public const int HWND_BOTTOM = 0x1;
+        public const uint SWP_NOSIZE = 0x1;
+        public const uint SWP_NOMOVE = 0x2;
+        public const uint SWP_SHOWWINDOW = 0x40;
+        private const int GWL_EXSTYLE = -20;
+        private const int WS_EX_TOOLWINDOW = 0x00000080;
 
         [DllImport("user32.dll")]
         private static extern int SetWindowLong(IntPtr window, int index, int value);
@@ -33,13 +41,7 @@ namespace EuroWIdjet
         [DllImport("user32.dll")]
         public static extern bool SetWindowPos(int hWnd, int hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
-        public const int HWND_BOTTOM = 0x1;
-        public const uint SWP_NOSIZE = 0x1;
-        public const uint SWP_NOMOVE = 0x2;
-        public const uint SWP_SHOWWINDOW = 0x40;
-        private const int GWL_EXSTYLE = -20;
-        private const int WS_EX_TOOLWINDOW = 0x00000080;
-        private const string TRADES = "https://api.exmo.com/v1/trades/?pair=USD_RUB";
+        public DrawingImage Graph { get; set; }
 
         public MainWindow()
         {
@@ -47,113 +49,85 @@ namespace EuroWIdjet
 
             this.Background = new SolidColorBrush(Color.FromArgb(0, 34, 34, 34));
 
-            var listNums =  parseTrades(getTrades());
-            double awerage = calkAverage(listNums);
-
-            drawGraph();
+            startSycle();
 
         }
 
-        private string getTrades()
+        private void startSycle()
         {
-            string line = "";
-            WebClient client = new WebClient();
-            using (Stream stream = client.OpenRead(TRADES))
+            int i = 0;
+            var data = new Dictionary<DateTime, double>();
+
+            while (i < 10)
             {
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    line = reader.ReadLine();
-                }
+                double currensy = GetCurrency();
+                var time = DateTime.Now;
+                data.Add(time, currensy);
+
+                Thread.Sleep(100);
+                i++;
             }
-            return line;
+            //data.Add(DateTime.Now, 79);
+            //Thread.Sleep(100);
+            //data.Add(DateTime.Now, 80);
+
+            image1.Source = drawGraph(data);
         }
 
-        private double calkAverage(List<double> arr)
+        private DrawingImage drawGraph(Dictionary<DateTime, double> data)
         {
-            double sum = 0;
-            foreach (var item in arr)
+            var pointsCount = data.Count - 1;
+
+            DrawingGroup drawingGroup = new DrawingGroup();
+            GeometryDrawing geometryDrawing = new GeometryDrawing();
+            GeometryGroup geometryGroup = new GeometryGroup();
+            geometryDrawing.Brush = Brushes.Red;
+            geometryDrawing.Pen = new Pen(Brushes.Pink, 0.05);
+
+            geometryGroup = new GeometryGroup();
+
+            for (int i = 1; i <= pointsCount; i++)
             {
-                sum += item;
+                var a = new Point((double)i*5 / (double)pointsCount, 100-data.Values.ElementAt(i));
+                var b = new Point((double)(i - 1)*5 / (double)pointsCount, 100-data.Values.ElementAt(i - 1));
+
+                LineGeometry line = new LineGeometry(a, b);
+                geometryGroup.Children.Add(line);
             }
 
-            return sum / arr.Count();
+            geometryDrawing.Brush = Brushes.Transparent;
+            geometryDrawing.Pen = new Pen(Brushes.White, 0.015);
+            
+            //Numbers
+
+            var maxValue = data.Values.Max();
+            var minValue = data.Values.Min();
+            var diff = (maxValue - minValue)/10;
+            
+            //for (int i = 1; i < 10; i++)
+            //{
+            //    // Create a formatted text string.
+            //    FormattedText formattedText = new FormattedText(
+            //        ((double)(0 - i *diff)).ToString(),
+            //        CultureInfo.GetCultureInfo("en-us"),
+            //        FlowDirection.LeftToRight,
+            //        new Typeface("Verdana"),
+            //        0.04,
+            //        Brushes.Green);
+
+            //    //Build a geometry out of the formatted text.
+            //    Geometry geometry = formattedText.BuildGeometry(new Point(0, -i * diff -minValue ));
+            //    geometryGroup.Children.Add(geometry);
+            //}
+
+            geometryDrawing.Geometry = geometryGroup;
+            drawingGroup.Children.Add(geometryDrawing);
+            return new DrawingImage(drawingGroup);
         }
 
-        private List<double> parseTrades(string line)
+        double GetCurrency()
         {
-            var sentences = line.Split(',');
-            var arr = new List<double>();
-
-            foreach (var item in sentences)
-            {
-                if (item.Contains("price"))
-                {
-                    var a = Regex.Replace(item, @"[^\d-[.]]", "").Replace(".", ",");
-                    double r = Convert.ToDouble(a);
-                    arr.Add(r);
-                }
-            }
-            return arr;
-        }
-
-        private void drawGraph()
-        {
-
-            int Np = 30;
-            double[] Data1 = new double[Np + 1];
-
-            for (int i = 0; i < Np + 1; i++)
-            {
-                Data1[i] = Math.Sin(i / 5.0) + 1;
-            }
-
-            //Теперь нарисуем график
-
-            DrawingGroup aDrawingGroup = new DrawingGroup();
-            GeometryDrawing drw = new GeometryDrawing();
-            GeometryGroup gg = new GeometryGroup();
-
-            drw.Brush = Brushes.Red;
-            drw.Pen = new Pen(Brushes.Pink, 0.05);
-
-            gg = new GeometryGroup();
-            for (int i = 0; i < Np; i++)
-            {
-                LineGeometry l = new LineGeometry(new Point((double)i / (double)Np, 1.0 - (Data1[i] / 2.0)),
-                    new Point((double)(i + 1) / (double)Np, 1.0 - (Data1[i + 1] / 2.0)));
-                gg.Children.Add(l);
-            }
-
-            //Обрезание лишнего
-            {
-                drw.Brush = Brushes.Transparent;
-                drw.Pen = new Pen(Brushes.White, 0.2);
-
-                //Numbers
-                drw.Pen = new Pen(Brushes.FloralWhite, 0.005);
-
-                for (int i = 1; i < 10; i++)
-                {
-                    // Create a formatted text string.
-                    FormattedText formattedText = new FormattedText(
-                        ((double)(1 - i * 0.1)).ToString(),
-                        CultureInfo.GetCultureInfo("en-us"),
-                        FlowDirection.LeftToRight,
-                        new Typeface("Verdana"),
-                        0.04,
-                        Brushes.Green);
-
-                    // Build a geometry out of the formatted text.
-                    Geometry geometry = formattedText.BuildGeometry(new Point(-0.1, i * 0.1 - 0.03));
-                    gg.Children.Add(geometry);
-                }
-
-                drw.Geometry = gg;
-                aDrawingGroup.Children.Add(drw);
-
-                image1.Source = new DrawingImage(aDrawingGroup);
-            }
-
+            return Currency.GetCourse();
         }
 
         private void titleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -187,6 +161,66 @@ namespace EuroWIdjet
         private void Window_Activated(object sender, EventArgs e)
         {
             ShoveToBackground();
+        }
+    }
+
+    static class Currency
+    {
+        public const string Trades = "https://api.exmo.com/v1/trades/?pair=USD_RUB";
+
+        public static double GetCourse()
+        {
+            var trades = getTrades();
+            var listNums = parseTrades(trades);
+            double awerage = calkAverage(listNums);
+            return awerage;
+        }
+
+        private static string getTrades()
+        {
+            string line = "";
+            WebClient client = new WebClient();
+            try
+            {
+                using (Stream stream = client.OpenRead(Trades))
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        line = reader.ReadLine();
+                    }
+                }
+            }
+            catch { }
+
+            return line;
+        }
+
+        private static double calkAverage(List<double> arr)
+        {
+            double sum = 0;
+            foreach (var item in arr)
+            {
+                sum += item;
+            }
+
+            return sum / arr.Count();
+        }
+
+        private static List<double> parseTrades(string line)
+        {
+            var sentences = line.Split(',');
+            var arr = new List<double>();
+
+            foreach (var item in sentences)
+            {
+                if (item.Contains("price"))
+                {
+                    var a = Regex.Replace(item, @"[^\d-[.]]", "")/*.Replace(".", ",")*/;
+                    double r = Convert.ToDouble(a);
+                    arr.Add(r);
+                }
+            }
+            return arr;
         }
     }
 }
