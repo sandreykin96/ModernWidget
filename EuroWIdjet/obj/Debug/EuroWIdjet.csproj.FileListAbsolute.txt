@@ -43,3 +43,6 @@ C:\Users\yv-sandreikin\Desktop\ModernWidget\EuroWIdjet\obj\Debug\EuroWIdjet.pdb
 C:\Users\Юрий\Desktop\ModernWidget\EuroWIdjet\bin\Debug\System.Windows.Controls.DataVisualization.Toolkit.dll
 C:\Users\Юрий\Desktop\ModernWidget\EuroWIdjet\obj\Debug\EuroWIdjet.csproj.CopyComplete
 C:\Users\Юрий\Desktop\ModernWidget\EuroWIdjet\bin\Debug\WPFToolkit.dll
+C:\Users\yv-sandreikin\Desktop\ModernWidget\EuroWIdjet\bin\Debug\System.Windows.Controls.DataVisualization.Toolkit.dll
+C:\Users\yv-sandreikin\Desktop\ModernWidget\EuroWIdjet\bin\Debug\WPFToolkit.dll
+C:\Users\yv-sandreikin\Desktop\ModernWidget\EuroWIdjet\obj\Debug\EuroWIdjet.csproj.CopyComplete

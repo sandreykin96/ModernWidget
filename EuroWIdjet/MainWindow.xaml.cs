@@ -24,7 +24,6 @@ namespace EuroWIdjet
 {
     public partial class MainWindow : Window
     {
-
         public const int HWND_BOTTOM = 0x1;
         public const uint SWP_NOSIZE = 0x1;
         public const uint SWP_NOMOVE = 0x2;
@@ -40,33 +39,12 @@ namespace EuroWIdjet
 
         [DllImport("user32.dll")]
         public static extern bool SetWindowPos(int hWnd, int hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
-
-        public DrawingImage Graph { get; set; }
-
+       
         public MainWindow()
         {
             InitializeComponent();
-
             this.Background = new SolidColorBrush(Color.FromArgb(0, 34, 34, 34));
-
-            var valueList = new Dictionary<DateTime, double>();
-            int i = 0;
-            while (i < 10)
-            {
-                double currensy = GetCurrency();
-               
-                valueList.Add(DateTime.Now, currensy);
-                lineChart.DataContext = valueList;
-                
-                Thread.Sleep(1000);
-                i++;
-            }
-
-        }
-
-        double GetCurrency()
-        {
-            return Currency.GetCourse();
+            DataContext = new ApplicationViewModel();
         }
 
         private void titleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -100,66 +78,6 @@ namespace EuroWIdjet
         private void Window_Activated(object sender, EventArgs e)
         {
             ShoveToBackground();
-        }
-    }
-
-    static class Currency
-    {
-        public const string Trades = "https://api.exmo.com/v1/trades/?pair=USD_RUB";
-
-        public static double GetCourse()
-        {
-            var trades = getTrades();
-            var listNums = parseTrades(trades);
-            double awerage = calkAverage(listNums);
-            return awerage;
-        }
-
-        private static string getTrades()
-        {
-            string line = "";
-            WebClient client = new WebClient();
-            try
-            {
-                using (Stream stream = client.OpenRead(Trades))
-                {
-                    using (StreamReader reader = new StreamReader(stream))
-                    {
-                        line = reader.ReadLine();
-                    }
-                }
-            }
-            catch { }
-
-            return line;
-        }
-
-        private static double calkAverage(List<double> arr)
-        {
-            double sum = 0;
-            foreach (var item in arr)
-            {
-                sum += item;
-            }
-
-            return sum / arr.Count();
-        }
-
-        private static List<double> parseTrades(string line)
-        {
-            var sentences = line.Split(',');
-            var arr = new List<double>();
-
-            foreach (var item in sentences)
-            {
-                if (item.Contains("price"))
-                {
-                    var a = Regex.Replace(item, @"[^\d-[.]]", "").Replace(".", ",");
-                    double r = Convert.ToDouble(a);
-                    arr.Add(r);
-                }
-            }
-            return arr;
         }
     }
 }
