@@ -58,11 +58,15 @@
                                 </LinearGradientBrush>
                             </chartingToolkit:LineSeries.Background>
                         </chartingToolkit:LineSeries>
+
                     </chartingToolkit:Chart>
+                    <TextBlock Margin="15" FontSize="10" HorizontalAlignment="Left" Foreground="White">Wait</TextBlock>
+                    <StackPanel HorizontalAlignment="Right" Margin="15" >
+                        <Slider x:Name="slider" Minimum="1000" Maximum="60000" TickFrequency="1000" Value="{Binding Path=WaitingPeriod, Mode=OneWayToSource}" 
+                                Orientation="Horizontal" Width="150"/>
+                    </StackPanel>
                 </Grid>
             </Grid>
-
         </Border>
     </Border>
-
 </Window>

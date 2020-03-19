@@ -39,7 +39,9 @@ namespace EuroWIdjet
 
         [DllImport("user32.dll")]
         public static extern bool SetWindowPos(int hWnd, int hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
-       
+
+        public double Speed { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -79,5 +81,6 @@ namespace EuroWIdjet
         {
             ShoveToBackground();
         }
+               
     }
 }

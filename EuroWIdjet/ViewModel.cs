@@ -12,7 +12,7 @@ namespace EuroWIdjet
     class ApplicationViewModel:INotifyPropertyChanged
     {
         public Dictionary<string, double> currency;
-
+        
         public Dictionary<string, double> Currency
         {
             get { return currency; }
@@ -23,9 +23,31 @@ namespace EuroWIdjet
             }
         }
 
+        public int waitingPeriod;
+
+        public int WaitingPeriod
+        {
+            get { return waitingPeriod; }
+            set
+            {
+                if(value > 0)
+                {
+                    waitingPeriod = value;
+                    OnPropertyChanged("WaitingPeriod");
+                }
+            }
+        }
+
         public ApplicationViewModel()
         {
             Currency = new Dictionary<string, double>();
+            WaitingPeriod = 1000;
+
+            double currensy = GetCurrency();
+
+            if (currensy > 0)
+                Currency.Add(DateTime.Now.ToLongTimeString(), currensy);
+
             SycleAsync();
         }
 
@@ -47,7 +69,7 @@ namespace EuroWIdjet
                     if (currensy > 0)
                         tempDict.Add(DateTime.Now.ToLongTimeString(), currensy);
 
-                    Thread.Sleep(1000);
+                    Thread.Sleep(WaitingPeriod);
                     i++;
                 }
 
