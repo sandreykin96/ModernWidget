@@ -3,16 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-         xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+        xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         xmlns:local="clr-namespace:EuroWIdjet"
         mc:Ignorable="d" 
-        
-        Title="MainWindow" Height="350" Width="350" 
+        Title="Currency" Height="350" Width="350" 
         ShowInTaskbar="False" Loaded="Window_Loaded" Activated="Window_Activated"
         WindowStyle="None" AllowsTransparency="True">
 
     <Border Width="auto" Height="auto"  Background="Transparent">
-
         <Border Width="300" Height="300">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="0" BlurRadius="50" Color="#FF1010C5"/>
@@ -35,8 +33,11 @@
                     <RowDefinition></RowDefinition>
                     <RowDefinition Height="auto"></RowDefinition>
                 </Grid.RowDefinitions>
+                
                 <TextBlock x:Name ="titleBar" MouseLeftButtonDown="titleBar_MouseLeftButtonDown"   Margin="12" Foreground="White">USD to Ruble online</TextBlock>
+                
                 <Grid Grid.Row="1">
+                    
                     <chartingToolkit:Chart   Name="lineChart" Foreground="#FFFFF9F9"  >
                         <chartingToolkit:Chart.PlotAreaStyle>
                             <Style  TargetType="Grid">
@@ -58,13 +59,15 @@
                                 </LinearGradientBrush>
                             </chartingToolkit:LineSeries.Background>
                         </chartingToolkit:LineSeries>
-
                     </chartingToolkit:Chart>
+                    
                     <TextBlock Margin="15" FontSize="10" HorizontalAlignment="Left" Foreground="White">Wait</TextBlock>
+                    
                     <StackPanel HorizontalAlignment="Right" Margin="15" >
                         <Slider x:Name="slider" Minimum="1000" Maximum="60000" TickFrequency="1000" Value="{Binding Path=WaitingPeriod, Mode=OneWayToSource}" 
                                 Orientation="Horizontal" Width="150"/>
                     </StackPanel>
+                    
                 </Grid>
             </Grid>
         </Border>

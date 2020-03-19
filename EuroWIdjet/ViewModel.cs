@@ -9,10 +9,12 @@ using System.Threading.Tasks;
 
 namespace EuroWIdjet
 {
-    class ApplicationViewModel:INotifyPropertyChanged
+    class ApplicationViewModel : INotifyPropertyChanged
     {
         public Dictionary<string, double> currency;
-        
+
+        public int waitingPeriod;
+
         public Dictionary<string, double> Currency
         {
             get { return currency; }
@@ -23,14 +25,12 @@ namespace EuroWIdjet
             }
         }
 
-        public int waitingPeriod;
-
         public int WaitingPeriod
         {
             get { return waitingPeriod; }
             set
             {
-                if(value > 0)
+                if (value > 0)
                 {
                     waitingPeriod = value;
                     OnPropertyChanged("WaitingPeriod");
@@ -43,10 +43,10 @@ namespace EuroWIdjet
             Currency = new Dictionary<string, double>();
             WaitingPeriod = 1000;
 
-            double currensy = GetCurrency();
+            double currency = GetCurrency();
 
-            if (currensy > 0)
-                Currency.Add(DateTime.Now.ToLongTimeString(), currensy);
+            if (currency > 0)
+                Currency.Add(DateTime.Now.ToLongTimeString(), currency);
 
             SycleAsync();
         }
@@ -84,11 +84,11 @@ namespace EuroWIdjet
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
-
     }
 }

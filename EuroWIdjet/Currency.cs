@@ -13,15 +13,16 @@ namespace EuroWIdjet
 
         public static double GetCourse()
         {
-            var trades = getTrades();
-            var listNums = parseTrades(trades);
-            double awerage = calkAverage(listNums);
+            var trades = GetTrades();
+            var listNums = ParseTrades(trades);
+            double awerage = CalkAverage(listNums);
             return awerage;
         }
 
-        private static string getTrades()
+        private static string GetTrades()
         {
             string line = "";
+
             WebClient client = new WebClient();
             try
             {
@@ -38,17 +39,19 @@ namespace EuroWIdjet
             return line;
         }
 
-        private static double calkAverage(List<double> arr)
+        private static double CalkAverage(List<double> arr)
         {
             double sum = 0;
+
             foreach (var item in arr)
             {
                 sum += item;
             }
+
             return sum / arr.Count();
         }
 
-        private static List<double> parseTrades(string line)
+        private static List<double> ParseTrades(string line)
         {
             var sentences = line.Split(',');
             var arr = new List<double>();
@@ -57,9 +60,7 @@ namespace EuroWIdjet
             {
                 if (item.Contains("price"))
                 {
-                    var a = Regex.Replace(item, @"[^\d-[.]]", "")/*.Replace(".", ",")*/;
-                    double r = Convert.ToDouble(a);
-                    arr.Add(r);
+                    arr.Add(Convert.ToDouble(Regex.Replace(item, @"[^\d-[.]]", "").Replace(".", ",")));
                 }
             }
             return arr;
