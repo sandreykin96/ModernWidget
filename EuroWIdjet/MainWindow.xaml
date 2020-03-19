@@ -22,8 +22,8 @@
                 <LinearGradientBrush>
                     <GradientBrush.GradientStops>
                         <GradientStopCollection>
+                            <GradientStop Color="Black" Offset="0.0"></GradientStop>
                             <GradientStop Color="#FF1010C5" Offset="0.7"></GradientStop>
-                            <GradientStop Color="#FF588D5C" Offset="0.0"></GradientStop>
                         </GradientStopCollection>
                     </GradientBrush.GradientStops>
                 </LinearGradientBrush>
@@ -37,10 +37,10 @@
                 </Grid.RowDefinitions>
                 <TextBlock x:Name ="titleBar" MouseLeftButtonDown="titleBar_MouseLeftButtonDown"   Margin="12" Foreground="White">USD to Ruble online</TextBlock>
                 <Grid Grid.Row="1">
-                    <chartingToolkit:Chart   Name="lineChart"  >
+                    <chartingToolkit:Chart   Name="lineChart" Foreground="#FFFFF9F9"  >
                         <chartingToolkit:Chart.PlotAreaStyle>
                             <Style  TargetType="Grid">
-                                <Setter Property="Background" Value="#FF809DEA"/>
+                                <Setter Property="Background" Value="#FF1010C5"/>
                             </Style>
                         </chartingToolkit:Chart.PlotAreaStyle>
                         <chartingToolkit:Chart.LegendStyle>
