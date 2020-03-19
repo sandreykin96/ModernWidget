@@ -10,9 +10,9 @@
         Title="MainWindow" Height="350" Width="350" 
         ShowInTaskbar="False" Loaded="Window_Loaded" Activated="Window_Activated"
         WindowStyle="None" AllowsTransparency="True">
-    
+
     <Border Width="auto" Height="auto"  Background="Transparent">
-        
+
         <Border Width="300" Height="300">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="0" BlurRadius="50" Color="#FF1010C5"/>
@@ -40,7 +40,8 @@
                     <chartingToolkit:Chart   Name="lineChart" Foreground="#FFFFF9F9"  >
                         <chartingToolkit:Chart.PlotAreaStyle>
                             <Style  TargetType="Grid">
-                                <Setter Property="Background" Value="#FF1010C5"/>
+                                <Setter Property="Background" Value="Black"/>
+                                <Setter Property="Opacity" Value="0.27"/>
                             </Style>
                         </chartingToolkit:Chart.PlotAreaStyle>
                         <chartingToolkit:Chart.LegendStyle>
@@ -50,6 +51,12 @@
                             </Style>
                         </chartingToolkit:Chart.LegendStyle>
                         <chartingToolkit:LineSeries DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding Currency}"  >
+                            <chartingToolkit:LineSeries.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                                    <GradientStop Color="#FFB9D6F7"/>
+                                    <GradientStop Color="Black" Offset="1"/>
+                                </LinearGradientBrush>
+                            </chartingToolkit:LineSeries.Background>
                         </chartingToolkit:LineSeries>
                     </chartingToolkit:Chart>
                 </Grid>
