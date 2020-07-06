@@ -11,16 +11,17 @@ namespace EuroWIdjet
 {
     class ApplicationViewModel : INotifyPropertyChanged
     {
-        public Dictionary<string, double> currency;
+        private Dictionary<string, double> _currency;
+        public int PointsNumber { get; set; }
 
         public int waitingPeriod;
 
         public Dictionary<string, double> Currency
         {
-            get { return currency; }
+            get { return _currency; }
             set
             {
-                currency = value;
+                _currency = value;
                 OnPropertyChanged("Currency");
             }
         }
@@ -42,39 +43,37 @@ namespace EuroWIdjet
         {
             Currency = new Dictionary<string, double>();
             WaitingPeriod = 1000;
-
-            double currency = GetCurrency();
-
-            if (currency > 0)
-                Currency.Add(DateTime.Now.ToLongTimeString(), currency);
-
+            PointsNumber = 5;
             SycleAsync();
         }
 
-        public async void SycleAsync()
+        public async Task SycleAsync()
         {
             await Task.Run(() => Sycle());
         }
 
         private void Sycle()
         {
+            var dateAndNumsQueue = new Queue<DateAndNum>();
+
             while (true)
             {
-                int i = 0;
                 var tempDict = new Dictionary<string, double>();
-                while (i < 5)
+                double currensy = GetCurrency();
+
+                if (currensy > 0)
+                    dateAndNumsQueue.Enqueue(new DateAndNum(DateTime.Now.ToLongTimeString(), currensy));
+
+                if (dateAndNumsQueue.Count > PointsNumber)
+                    dateAndNumsQueue.Dequeue();
+
+                foreach (var item in dateAndNumsQueue)
                 {
-                    double currensy = GetCurrency();
-
-                    if (currensy > 0)
-                        tempDict.Add(DateTime.Now.ToLongTimeString(), currensy);
-
-                    Thread.Sleep(WaitingPeriod);
-                    i++;
+                    tempDict.Add(item.Date, item.Number);
                 }
 
-                Currency.Clear();
                 Currency = tempDict;
+                Thread.Sleep(WaitingPeriod);
             }
         }
 
@@ -89,6 +88,18 @@ namespace EuroWIdjet
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+    }
+
+    class DateAndNum
+    {
+        public string Date { get; set; }
+        public double Number { get; set; }
+
+        public DateAndNum(string date, double number)
+        {
+            Date = date;
+            Number = number;
         }
     }
 }
